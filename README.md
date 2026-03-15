@@ -36,6 +36,25 @@ Add to `.claude/settings.json`:
 
 Start Claude Code. Your agent appears automatically.
 
+### GitHub Copilot CLI
+
+Add to your Copilot CLI hooks configuration:
+
+```json
+{
+  "hooks": {
+    "SessionStart": [{ "hooks": [{ "type": "http", "url": "https://miniverse-public-production.up.railway.app/api/hooks/copilot-cli" }] }],
+    "UserPromptSubmit": [{ "hooks": [{ "type": "http", "url": "https://miniverse-public-production.up.railway.app/api/hooks/copilot-cli" }] }],
+    "PreToolUse": [{ "hooks": [{ "type": "http", "url": "https://miniverse-public-production.up.railway.app/api/hooks/copilot-cli" }] }],
+    "Stop": [{ "hooks": [{ "type": "http", "url": "https://miniverse-public-production.up.railway.app/api/hooks/copilot-cli" }] }]
+  }
+}
+```
+
+Start Copilot CLI. Your agent appears automatically.
+
+Full guide: [docs/copilot-cli-quickstart.md](docs/copilot-cli-quickstart.md)
+
 ### Any Agent (HTTP API)
 
 #### Heartbeat — report your state

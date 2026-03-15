@@ -580,6 +580,142 @@ export class MiniverseServer {
     }
   }
 
+  private handleCopilotCliHook(data: Record<string, unknown>) {
+    const event = data.hook_event_name as string | undefined;
+    if (!event) return;
+
+    // Derive agent ID from session_id (unique per instance) + cwd (human-readable)
+    const sessionId = data.session_id as string | undefined;
+    const cwd = data.cwd as string | undefined;
+    const folder = (cwd ?? '').split(/[\\/]/).filter(Boolean).pop() || 'code';
+    const shortSession = sessionId ? sessionId.slice(0, 6) : '';
+
+    const agentId = (data as any).agent
+      ?? (shortSession ? `copilot-${folder}-${shortSession}` : `copilot-${folder}`);
+    const agentName = (data as any).name
+      ?? (shortSession ? `Copilot (${folder} #${shortSession})` : `Copilot (${folder})`);
+
+    const toolName = data.tool_name as string | undefined;
+    const prompt = data.prompt as string | undefined;
+    const model = data.model as string | undefined;
+    const metadata = model ? { model } : undefined;
+
+    // Sub-agent fields
+    const subagentId = data.subagent_id as string | undefined;
+    const subagentTask = data.subagent_task as string | undefined;
+
+    switch (event) {
+      case 'SessionStart':
+        this.store.heartbeat({ agent: agentId, name: agentName, state: 'idle', metadata });
+        this.events.push(agentId, { type: 'status', state: 'idle' });
+        this.startKeepalive(agentId, agentName);
+        break;
+
+      case 'UserPromptSubmit':
+        this.store.heartbeat({
+          agent: agentId, name: agentName, state: 'thinking',
+          task: prompt ? truncate(prompt, 60) : 'Processing request',
+          metadata,
+        });
+        this.events.push(agentId, { type: 'status', state: 'thinking' });
+        this.startKeepalive(agentId, agentName);
+        break;
+
+      case 'PreToolUse':
+        this.store.heartbeat({
+          agent: agentId, name: agentName, state: 'working',
+          task: toolName ?? 'Using tool',
+          metadata,
+        });
+        break;
+
+      case 'PostToolUse':
+        this.store.heartbeat({
+          agent: agentId, name: agentName, state: 'working',
+          task: toolName ? `Done: ${toolName}` : 'Tool complete',
+          metadata,
+        });
+        break;
+
+      case 'PostToolUseFailure':
+        this.store.heartbeat({
+          agent: agentId, name: agentName, state: 'error',
+          task: toolName ? `Failed: ${toolName}` : 'Tool failed',
+          metadata,
+        });
+        this.events.push(agentId, { type: 'status', state: 'error' });
+        break;
+
+      case 'Stop':
+        this.store.heartbeat({ agent: agentId, name: agentName, state: 'idle', task: null, metadata });
+        this.events.push(agentId, { type: 'status', state: 'idle' });
+        break;
+
+      case 'SubagentStart': {
+        // Register sub-agent as its own citizen
+        const subId = subagentId
+          ? `${agentId}-sub-${subagentId.slice(0, 6)}`
+          : `${agentId}-sub-${Math.random().toString(36).slice(2, 8)}`;
+        const subName = subagentTask
+          ? `Copilot (${truncate(subagentTask, 20)})`
+          : `Copilot (sub of ${folder})`;
+        this.store.heartbeat({
+          agent: subId, name: subName, state: 'working', task: subagentTask ?? 'Running', metadata,
+        });
+        this.startKeepalive(subId, subName);
+        // Track sub-agent under parent so we can clean up on SessionEnd
+        if (!this.subagentKeepAlives.has(agentId)) this.subagentKeepAlives.set(agentId, new Set());
+        this.subagentKeepAlives.get(agentId)!.add(subId);
+        // Also update parent
+        this.store.heartbeat({
+          agent: agentId, name: agentName, state: 'working', task: 'Running subagent', metadata,
+        });
+        break;
+      }
+
+      case 'SubagentStop': {
+        // Find and offline the sub-agent
+        const subs = this.subagentKeepAlives.get(agentId);
+        if (subs) {
+          // If we have a subagentId, match it; otherwise pop the most recent
+          let matchedSubId: string | undefined;
+          if (subagentId) {
+            const prefix = `${agentId}-sub-${subagentId.slice(0, 6)}`;
+            for (const id of subs) {
+              if (id === prefix) { matchedSubId = id; break; }
+            }
+          }
+          if (!matchedSubId) matchedSubId = [...subs].pop();
+          if (matchedSubId) {
+            this.stopKeepalive(matchedSubId);
+            this.store.heartbeat({ agent: matchedSubId, name: matchedSubId, state: 'offline', task: null, metadata });
+            subs.delete(matchedSubId);
+          }
+        }
+        this.store.heartbeat({
+          agent: agentId, name: agentName, state: 'working', task: 'Subagent complete', metadata,
+        });
+        break;
+      }
+
+      case 'SessionEnd': {
+        this.stopKeepalive(agentId);
+        this.store.heartbeat({ agent: agentId, name: agentName, state: 'offline', task: null, metadata });
+        this.events.push(agentId, { type: 'status', state: 'offline' });
+        // Clean up any sub-agents
+        const subs = this.subagentKeepAlives.get(agentId);
+        if (subs) {
+          for (const subId of subs) {
+            this.stopKeepalive(subId);
+            this.store.heartbeat({ agent: subId, name: subId, state: 'offline', task: null, metadata });
+          }
+          this.subagentKeepAlives.delete(agentId);
+        }
+        break;
+      }
+    }
+  }
+
   private getDefaultWorldId(): string | null {
     const publicDir = this.publicDir ?? './public';
     const worldsDir = path.join(publicDir, 'worlds');
@@ -740,6 +876,25 @@ export class MiniverseServer {
         if (qAgent) data.agent = qAgent;
         if (qName) data.name = qName;
         this.handleClaudeCodeHook(data);
+        res.writeHead(200);
+        res.end();
+      } catch {
+        res.writeHead(200);
+        res.end();
+      }
+      return;
+    }
+
+    if (req.method === 'POST' && url.pathname.startsWith('/api/hooks/copilot-cli')) {
+      try {
+        const body = await readBody(req);
+        const data = JSON.parse(body);
+        // Allow overriding agent/name via query params
+        const qAgent = url.searchParams.get('agent');
+        const qName = url.searchParams.get('name');
+        if (qAgent) data.agent = qAgent;
+        if (qName) data.name = qName;
+        this.handleCopilotCliHook(data);
         res.writeHead(200);
         res.end();
       } catch {

@@ -376,6 +376,56 @@ Pass `agent` and `name` fields in the hook URL params or body to override:
 }
 ```
 
+## GitHub Copilot CLI Integration
+
+Zero-code setup. Add this to your Copilot CLI hooks configuration and Copilot CLI automatically appears in the world.
+
+### Copilot CLI hooks configuration
+
+```json
+{
+  "hooks": {
+    "SessionStart": [{ "hooks": [{ "type": "http", "url": "http://localhost:4321/api/hooks/copilot-cli" }] }],
+    "UserPromptSubmit": [{ "hooks": [{ "type": "http", "url": "http://localhost:4321/api/hooks/copilot-cli" }] }],
+    "PreToolUse": [{ "hooks": [{ "type": "http", "url": "http://localhost:4321/api/hooks/copilot-cli" }] }],
+    "PostToolUse": [{ "hooks": [{ "type": "http", "url": "http://localhost:4321/api/hooks/copilot-cli" }] }],
+    "PostToolUseFailure": [{ "hooks": [{ "type": "http", "url": "http://localhost:4321/api/hooks/copilot-cli" }] }],
+    "Stop": [{ "hooks": [{ "type": "http", "url": "http://localhost:4321/api/hooks/copilot-cli" }] }],
+    "SubagentStart": [{ "hooks": [{ "type": "http", "url": "http://localhost:4321/api/hooks/copilot-cli" }] }],
+    "SubagentStop": [{ "hooks": [{ "type": "http", "url": "http://localhost:4321/api/hooks/copilot-cli" }] }],
+    "SessionEnd": [{ "hooks": [{ "type": "http", "url": "http://localhost:4321/api/hooks/copilot-cli" }] }]
+  }
+}
+```
+
+That's it. The server translates Copilot CLI's lifecycle events into miniverse states:
+
+| Copilot CLI Event | Miniverse State | Task |
+|---|---|---|
+| SessionStart | idle | — |
+| UserPromptSubmit | thinking | First 60 chars of prompt |
+| PreToolUse | working | Tool name |
+| PostToolUse | working | "Done: tool name" |
+| PostToolUseFailure | error | "Failed: tool name" |
+| Stop | idle | — |
+| SubagentStart | working | "Running subagent" |
+| SubagentStop | working | "Subagent complete" |
+| SessionEnd | offline | — |
+
+The agent ID is derived as `copilot-{folder}-{session}`. Multiple Copilot CLI sessions in different projects show as separate citizens. The `model` field is also captured in agent metadata.
+
+### Custom agent name
+
+Pass `agent` and `name` query params in every hook URL to override:
+
+```json
+{
+  "hooks": {
+    "SessionStart": [{ "hooks": [{ "type": "http", "url": "http://localhost:4321/api/hooks/copilot-cli?agent=my-copilot&name=My%20Copilot" }] }]
+  }
+}
+```
+
 ---
 
 ## Client Setup

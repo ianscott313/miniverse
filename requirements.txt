@@ -1,0 +1,22 @@
+# Python dependencies for the Cinematic Ads pipeline (ads/)
+# The main Miniverse project is JavaScript/TypeScript (see package.json).
+# These requirements are used only by the Python ads/ module.
+
+groq>=0.9.0
+huggingface-hub>=0.22.0
+kokoro>=0.8.0
+soundfile>=0.12.0
+requests>=2.31.0
+moviepy>=2.0.0
+faster-whisper>=1.0.0
+Pillow>=10.0.0
+numpy>=1.26.0
+google-api-python-client>=2.100.0
+google-auth>=2.23.0
+google-auth-oauthlib>=1.1.0
+pytest>=8.0.0
+pytest-mock>=3.12.0
+openai>=1.30.0
+elevenlabs>=1.5.0
+rembg>=2.0.57
+onnxruntime>=1.17.0

@@ -9,13 +9,17 @@
     "server": "miniverse"
   },
   "dependencies": {
-    "@miniverse/core": "file:/Users/ian/Developer/miniverse/packages/core",
-    "@miniverse/server": "file:/Users/ian/Developer/miniverse/packages/server"
+    "@miniverse/core": "file:../packages/core",
+    "@miniverse/server": "file:../packages/server"
   },
   "devDependencies": {
-    "@miniverse/generate": "file:/Users/ian/Developer/miniverse/packages/generate",
+    "@miniverse/generate": "file:../packages/generate",
     "concurrently": "^9.0.0",
     "typescript": "^5.4.0",
     "vite": "^5.4.0"
+  },
+  "allowScripts": {
+    "esbuild": true,
+    "sharp": true
   }
 }

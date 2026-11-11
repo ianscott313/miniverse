@@ -17,5 +17,10 @@
   "devDependencies": {
     "sharp": "^0.34.5",
     "typescript": "^5.4.0"
+  },
+  "allowScripts": {
+    "esbuild@0.21.5": true,
+    "esbuild@0.20.2": true,
+    "sharp@0.34.5": true
   }
 }

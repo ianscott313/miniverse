@@ -1,6 +1,6 @@
 {
-  "gridCols": 16,
-  "gridRows": 12,
+  "gridCols": 14,
+  "gridRows": 9,
   "floor": [
     [
       "exposed_brick_wall",
@@ -16,13 +16,9 @@
       "exposed_brick_wall",
       "exposed_brick_wall",
       "exposed_brick_wall",
-      "exposed_brick_wall",
-      "exposed_brick_wall",
       "exposed_brick_wall"
     ],
     [
-      "exposed_brick_wall",
-      "exposed_brick_wall",
       "exposed_brick_wall",
       "exposed_brick_wall",
       "exposed_brick_wall",
@@ -52,31 +48,9 @@
       "main_floor",
       "main_floor",
       "main_floor",
-      "main_floor",
-      "main_floor",
       "main_floor"
     ],
     [
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor"
-    ],
-    [
-      "main_floor",
-      "main_floor",
       "main_floor",
       "main_floor",
       "main_floor",
@@ -106,31 +80,9 @@
       "main_floor",
       "main_floor",
       "main_floor",
-      "main_floor",
-      "main_floor",
       "main_floor"
     ],
     [
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor"
-    ],
-    [
-      "main_floor",
-      "main_floor",
       "main_floor",
       "main_floor",
       "main_floor",
@@ -160,8 +112,6 @@
       "main_floor",
       "main_floor",
       "main_floor",
-      "main_floor",
-      "main_floor",
       "main_floor"
     ],
     [
@@ -178,31 +128,9 @@
       "main_floor",
       "main_floor",
       "main_floor",
-      "main_floor",
-      "main_floor",
       "main_floor"
     ],
     [
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor",
-      "main_floor"
-    ],
-    [
-      "main_floor",
-      "main_floor",
       "main_floor",
       "main_floor",
       "main_floor",
@@ -231,14 +159,6 @@
     {
       "id": "large_window",
       "x": 6.5,
-      "y": 0,
-      "w": 3,
-      "h": 2,
-      "layer": "below"
-    },
-    {
-      "id": "large_window",
-      "x": 11.75,
       "y": 0,
       "w": 3,
       "h": 2,
@@ -285,14 +205,6 @@
       "layer": "above"
     },
     {
-      "id": "area_rug_lounge",
-      "x": 10.5,
-      "y": 4.75,
-      "w": 4,
-      "h": 3,
-      "layer": "below"
-    },
-    {
       "id": "low_coffee_table",
       "x": 11.5,
       "y": 5.75,
@@ -325,35 +237,11 @@
       ]
     },
     {
-      "id": "bean_bag_chair_light",
-      "x": 13,
-      "y": 5.25,
-      "w": 1.5,
-      "h": 1.5,
-      "layer": "below",
-      "anchors": [
-        {
-          "name": "bean_bag_chair_light_24_0",
-          "ox": 0.75,
-          "oy": 1.5,
-          "type": "rest"
-        }
-      ]
-    },
-    {
       "id": "coffee_bar_counter",
       "x": 0,
       "y": 2,
       "w": 2.7,
       "h": 2.5,
-      "layer": "below"
-    },
-    {
-      "id": "bookshelf_packed",
-      "x": 12,
-      "y": 2.5,
-      "w": 2.3,
-      "h": 2,
       "layer": "below"
     },
     {
@@ -373,35 +261,11 @@
       ]
     },
     {
-      "id": "ergonomic_chair",
-      "x": 7,
-      "y": 9,
-      "w": 1,
-      "h": 1,
-      "layer": "above",
-      "anchors": [
-        {
-          "name": "ergonomic_chair_14_0",
-          "ox": 0.5,
-          "oy": 1,
-          "type": "rest"
-        }
-      ]
-    },
-    {
       "id": "tall_potted_plant",
       "x": 10.75,
       "y": 2.5,
       "w": 1,
       "h": 2,
-      "layer": "below"
-    },
-    {
-      "id": "mini_fridge",
-      "x": 14.5,
-      "y": 3.25,
-      "w": 0.8,
-      "h": 1.1,
       "layer": "below"
     },
     {
@@ -418,26 +282,21 @@
       "name": "wander_central_north",
       "x": 6,
       "y": 6
-    },
-    {
-      "name": "wander_central_south",
-      "x": 6,
-      "y": 11
     }
   ],
   "propImages": {
     "wooden_desk_single": "world_assets/props/prop_0_wooden_desk_single.png",
     "coffee_bar_counter": "world_assets/props/prop_4_coffee_bar_counter.png",
-    "ergonomic_chair": "world_assets/props/prop_1_ergonomic_chair.png",
-    "tall_potted_plant": "world_assets/props/prop_2_tall_potted_plant.png",
     "mini_fridge": "world_assets/props/prop_6_mini_fridge.png",
+    "tall_potted_plant": "world_assets/props/prop_2_tall_potted_plant.png",
+    "ergonomic_chair": "world_assets/props/prop_1_ergonomic_chair.png",
+    "low_coffee_table": "world_assets/props/prop_9_low_coffee_table.png",
     "bookshelf_packed": "world_assets/props/prop_3_bookshelf_packed.png",
     "espresso_machine": "world_assets/props/prop_5_espresso_machine.png",
-    "low_coffee_table": "world_assets/props/prop_9_low_coffee_table.png",
-    "bean_bag_chair_dark": "world_assets/props/prop_7_bean_bag_chair_dark.png",
-    "bean_bag_chair_light": "world_assets/props/prop_8_bean_bag_chair_light.png",
     "wooden_framed_whiteboard": "world_assets/props/prop_11_wooden_framed_whiteboard.png",
+    "bean_bag_chair_dark": "world_assets/props/prop_7_bean_bag_chair_dark.png",
     "area_rug_lounge": "world_assets/props/prop_12_area_rug_lounge.png",
+    "bean_bag_chair_light": "world_assets/props/prop_8_bean_bag_chair_light.png",
     "large_window": "world_assets/props/prop_10_large_window.png"
   },
   "tiles": {
@@ -445,5 +304,6 @@
     "exposed_brick_wall": "world_assets/tiles/exposed_brick_wall.png",
     "concrete_accent": "world_assets/tiles/concrete_accent.png",
     "tileset": "world_assets/tiles/tileset.png"
-  }
+  },
+  "citizens": []
 }

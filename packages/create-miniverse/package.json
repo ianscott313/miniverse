@@ -12,7 +12,7 @@
     "templates"
   ],
   "scripts": {
-    "build": "esbuild src/index.ts --bundle --platform=node --format=esm --outfile=dist/index.js --banner:js='#!/usr/bin/env node' --external:@clack/prompts --external:picocolors",
+    "build": "esbuild src/index.ts --bundle --platform=node --format=esm --outfile=dist/index.js --banner:js=\"#!/usr/bin/env node\" --external:@clack/prompts --external:picocolors",
     "dev": "npm run build -- --watch"
   },
   "dependencies": {
